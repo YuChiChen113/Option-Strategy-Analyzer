@@ -2,7 +2,7 @@
 #include<fstream>
 using namespace std;
 
-//³æ¤é³Ì¤jÀò§Q¡B³æ¤é³Ì¤jÁ«·l¡B²Ö­pÀò§Q
+//å–®æ—¥æœ€å¤§ç²åˆ©ã€å–®æ—¥æœ€å¤§è™§æã€ç´¯è¨ˆç²åˆ©
 
 struct TX
 {
@@ -10,60 +10,60 @@ struct TX
 	int price[285][3];
 };
 
-int strategy1(TX *ptx)    //µ¦²¤¤@ 
+int strategy1(TX *ptx)    //ç­–ç•¥ä¸€ 
 {
-	int r=(ptx->price[284][2]-ptx->price[0][2])*200;    //¤@ÂI´«ºâ¦¨¥x¹ô¬° 200 ¤¸
+	int r=(ptx->price[284][2]-ptx->price[0][2])*200;    //ä¸€é»æ›ç®—æˆå°å¹£ç‚º 200 å…ƒ
 	cout<<r<<endl;
-	return r;    // r¬OÀò§Q 
+	return r;    // ræ˜¯ç²åˆ© 
 }
 
-int strategy2(TX *ptx,double stoploss)    //µ¦²¤¤G
+int strategy2(TX *ptx,double stoploss)    //ç­–ç•¥äºŒ
 {
-	int cost=ptx->price[0][2];    //¦¨¥» 
-	int slp=(int)(cost*(1-stoploss)+0.5);    //°±·lÂI   +0.5¬°¥|±Ë¤­¤J 
+	int cost=ptx->price[0][2];    //æˆæœ¬ 
+	int slp=(int)(cost*(1-stoploss)+0.5);    //åœæé»   +0.5ç‚ºå››æ¨äº”å…¥ 
 	int final_price;
 	for(int n=1;n<285;n++)
 	{
 		final_price=ptx->price[n][2];
 		if(ptx->price[n][2]<=slp)
 		{
-			cout<<"°±·l"<<endl;
-			break;    //¦pªG¬O³Ì«á¤@µ§¼Æ¦r¡Afinal_price´N¤£·|§ó·s¤F 
+			cout<<"åœæ"<<endl;
+			break;    //å¦‚æœæ˜¯æœ€å¾Œä¸€ç­†æ•¸å­—ï¼Œfinal_priceå°±ä¸æœƒæ›´æ–°äº† 
 		}
 	}
-	return (final_price-cost)*200;    //Àò§Q 
+	return (final_price-cost)*200;    //ç²åˆ© 
 }
 
-int strategy3(TX*ptx,double stoploss,double takeprofit)    //µ¦²¤¤T 
+int strategy3(TX*ptx,double stoploss,double takeprofit)    //ç­–ç•¥ä¸‰ 
 {
-	int cost=ptx->price[0][2];    //¦¨¥» 
-	int slp=(int)(cost*(1-stoploss)+0.5);    //°±·lÂI
-	int tpp=(int)(cost*(1+takeprofit)+0.5);    //°±§QÂI
+	int cost=ptx->price[0][2];    //æˆæœ¬ 
+	int slp=(int)(cost*(1-stoploss)+0.5);    //åœæé»
+	int tpp=(int)(cost*(1+takeprofit)+0.5);    //åœåˆ©é»
 	int final_price;
 	for(int n=1;n<285;n++)
 	{
 		final_price=ptx->price[n][2];
 		if(ptx->price[n][2]<=slp)
 		{
-			cout<<"°±·l"<<endl;
-			break;    // final_price´N¤£·|§ó·s¤F 
+			cout<<"åœæ"<<endl;
+			break;    // final_priceå°±ä¸æœƒæ›´æ–°äº† 
 		}
 		if(ptx->price[n][2]>=tpp)
 		{
-			cout<<"°±§Q"<<endl;
+			cout<<"åœåˆ©"<<endl;
 			break;
 		}
 	}
 	return (final_price-cost)*200;
 }
 
-int strategy4(TX*ptx)    //µ¦²¤¥| 
+int strategy4(TX*ptx)    //ç­–ç•¥å›› 
 {
 	// price[n-1]<=MA[n-1]&&price[n]>MA[n]&&MA[n-2]>MA[n-1]&&MA[n]>MA[n-1]
 	double MA5[285]={0};
 	double sum;
-	int cost,position=0,r=0;    //position:¤â¤W¦³¦h¤Ö  r:Àò§Q 
-	for(int n=4;n<285;n++)    //²Ä¤­¤ÀÄÁ¬°¤@¨ì¥|¤ÀÄÁªº¥­§¡ 
+	int cost,position=0,r=0;    //position:æ‰‹ä¸Šæœ‰å¤šå°‘  r:ç²åˆ© 
+	for(int n=4;n<285;n++)    //ç¬¬äº”åˆ†é˜ç‚ºä¸€åˆ°å››åˆ†é˜çš„å¹³å‡ 
 	{
 		sum=0;
 		for(int i=n-4;i<=n;i++)
@@ -72,7 +72,7 @@ int strategy4(TX*ptx)    //µ¦²¤¥|
 		}
 		MA5[n]=sum/5;
 	}
-	for(int n=6;n<285;n++)    //±q²Ä¤C¤ÀÄÁ¶}©l 
+	for(int n=6;n<285;n++)    //å¾ç¬¬ä¸ƒåˆ†é˜é–‹å§‹ 
 	{
 		if(ptx->price[n-1][2]<=MA5[n-1]&&ptx->price[n][2]>MA5[n]&&MA5[n-2]>MA5[n-1]&&MA5[n]>MA5[n-1])
 		{
@@ -114,12 +114,12 @@ int strategy4(TX*ptx)    //µ¦²¤¥|
 
 int strategy5(TX*ptx,double stoploss,double takeprofit,double downward,double upward)
 {
-	int org_cost=ptx->price[0][2];    //­ì©l¤@ÂI»ù®æ 
-	int cost=ptx->price[0][2];    //²{¦b©Òªáªº¿ú 
-	int slp=(int)(org_cost*(1-stoploss)+0.5);    //°±·lÂI
-	int tpp=(int)(org_cost*(1+takeprofit)+0.5);    //°±§QÂI
-	int loss=(int)(org_cost*(1-downward)+0.5);    //½æ¥X
-	int add=(int)(org_cost*(1+upward)+0.5);    //¶R¶i
+	int org_cost=ptx->price[0][2];    //åŸå§‹ä¸€é»åƒ¹æ ¼ 
+	int cost=ptx->price[0][2];    //ç¾åœ¨æ‰€èŠ±çš„éŒ¢ 
+	int slp=(int)(org_cost*(1-stoploss)+0.5);    //åœæé»
+	int tpp=(int)(org_cost*(1+takeprofit)+0.5);    //åœåˆ©é»
+	int loss=(int)(org_cost*(1-downward)+0.5);    //è³£å‡º
+	int add=(int)(org_cost*(1+upward)+0.5);    //è²·é€²
 	int final_price;
 	int amount=1;
 	for(int n=1;n<285;n++)
@@ -129,22 +129,22 @@ int strategy5(TX*ptx,double stoploss,double takeprofit,double downward,double up
 		{
 			cost=cost-0.5*ptx->price[n][2];
 			amount=amount-0.5;
-			cout<<"½æ¥X"<<" ";
+			cout<<"è³£å‡º"<<" ";
 		}
 		if(ptx->price[n][2]>=add&&ptx->price[n][2]<tpp)
 		{
 			cost=cost+0.5*ptx->price[n][2];
 			amount=amount+0.5;
-			cout<<"¶R¶i"<<" ";
+			cout<<"è²·é€²"<<" ";
 		}
 		if(ptx->price[n][2]<=slp)
 		{
-			cout<<"°±·l"<<endl;
+			cout<<"åœæ"<<endl;
 			break;
 		}
 		if(ptx->price[n][2]>=tpp)
 		{
-			cout<<"°±§Q"<<endl;
+			cout<<"åœåˆ©"<<endl;
 			break;
 		}
 	}
@@ -276,11 +276,11 @@ int minimum(TX*data,int day_num,int strategy_no)
 
 int main()
 {
-	int day_num,count=0,m;    // m¬°²Ä´X¤ÀÄÁ 
-	char c,str[101];    //±×½u¥Îc¥N±¼ 
+	int day_num,count=0,m;    // mç‚ºç¬¬å¹¾åˆ†é˜ 
+	char c,str[101];    //æ–œç·šç”¨cä»£æ‰ 
 	int year,month,day,hour,minute,exdate,price;
 	TX *data,*ptx;
-	ifstream fin;    //¥H¿é¤J¤è¦¡¶}±ÒÀÉ®× 
+	ifstream fin;    //ä»¥è¼¸å…¥æ–¹å¼é–‹å•Ÿæª”æ¡ˆ 
 	fin.open("TXF_minute_2021_285.csv");
 	fin.getline(str,100);
 	while(fin>>year)
@@ -298,8 +298,8 @@ int main()
 			count++;
 		}
 	}
-	fin.close();    //Ãö³¬ÀÉ®×
-	day_num=count;    //¦@¦³´X¤Ñ 
+	fin.close();    //é—œé–‰æª”æ¡ˆ
+	day_num=count;    //å…±æœ‰å¹¾å¤© 
 	cout<<day_num<<endl;
 	data=new TX[day_num];
 	ptx=data;
@@ -328,16 +328,16 @@ int main()
 		m++;
 		if(hour==13&&minute==29)
 		{
-			m=0;    //Âk¹s
+			m=0;    //æ­¸é›¶
 			ptx++;
 		}
 	}
-	fin.close();    //Ãö³¬ÀÉ®×
+	fin.close();    //é—œé–‰æª”æ¡ˆ
 	// data[2].price[100][2]
-	cout<<"µ¦²¤¤@(buy and hold)¥iÀò§Q: "<<trading(data,day_num,1)<<" ³æ¤é³Ì¤jÀò§Q: "<<maximum(data,day_num,1)<<" ³æ¤é³Ì¤jÁ«·l: "<<minimum(data,day_num,1)<<endl;
-	cout<<"µ¦²¤¤G(B&H+°±·l)¥iÀò§Q: "<<trading(data,day_num,2)<<" ³æ¤é³Ì¤jÀò§Q: "<<maximum(data,day_num,2)<<" ³æ¤é³Ì¤jÁ«·l: "<<minimum(data,day_num,2)<<endl;
-	cout<<"µ¦²¤¤T(B&H+°±·l°±§Q)¥iÀò§Q: "<<trading(data,day_num,3)<<" ³æ¤é³Ì¤jÀò§Q: "<<maximum(data,day_num,3)<<" ³æ¤é³Ì¤jÁ«·l: "<<minimum(data,day_num,3)<<endl;
-	cout<<"µ¦²¤¥|(Â²¤Æª©¸¯ÄõºÑ¥æ©öªk«h)¥iÀò§Q: "<<trading(data,day_num,4)<<" ³æ¤é³Ì¤jÀò§Q: "<<maximum(data,day_num,4)<<" ³æ¤é³Ì¤jÁ«·l: "<<minimum(data,day_num,4)<<endl;
-	cout<<"µ¦²¤¤­¥iÀò§Q: "<<trading(data,day_num,5)<<" ³æ¤é³Ì¤jÀò§Q: "<<maximum(data,day_num,5)<<" ³æ¤é³Ì¤jÁ«·l: "<<minimum(data,day_num,5)<<endl;
+	cout<<"ç­–ç•¥ä¸€(buy and hold)å¯ç²åˆ©: "<<trading(data,day_num,1)<<" å–®æ—¥æœ€å¤§ç²åˆ©: "<<maximum(data,day_num,1)<<" å–®æ—¥æœ€å¤§è™§æ: "<<minimum(data,day_num,1)<<endl;
+	cout<<"ç­–ç•¥äºŒ(B&H+åœæ)å¯ç²åˆ©: "<<trading(data,day_num,2)<<" å–®æ—¥æœ€å¤§ç²åˆ©: "<<maximum(data,day_num,2)<<" å–®æ—¥æœ€å¤§è™§æ: "<<minimum(data,day_num,2)<<endl;
+	cout<<"ç­–ç•¥ä¸‰(B&H+åœæåœåˆ©)å¯ç²åˆ©: "<<trading(data,day_num,3)<<" å–®æ—¥æœ€å¤§ç²åˆ©: "<<maximum(data,day_num,3)<<" å–®æ—¥æœ€å¤§è™§æ: "<<minimum(data,day_num,3)<<endl;
+	cout<<"ç­–ç•¥å››(ç°¡åŒ–ç‰ˆè‘›è˜­ç¢§äº¤æ˜“æ³•å‰‡)å¯ç²åˆ©: "<<trading(data,day_num,4)<<" å–®æ—¥æœ€å¤§ç²åˆ©: "<<maximum(data,day_num,4)<<" å–®æ—¥æœ€å¤§è™§æ: "<<minimum(data,day_num,4)<<endl;
+	cout<<"ç­–ç•¥äº”å¯ç²åˆ©: "<<trading(data,day_num,5)<<" å–®æ—¥æœ€å¤§ç²åˆ©: "<<maximum(data,day_num,5)<<" å–®æ—¥æœ€å¤§è™§æ: "<<minimum(data,day_num,5)<<endl;
 	return 0;
 } 
